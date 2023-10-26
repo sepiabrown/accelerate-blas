@@ -76,12 +76,7 @@ gemm :: forall e. Numeric e
 gemm alpha opA matA opB matB = go (lift (unit alpha, matA, matB))
   where
     go =
-#ifdef ACCELERATE_LLVM_NATIVE_BACKEND
       foreignAcc (CPU.gemm nR opA opB) $
-#endif
-#ifdef ACCELERATE_LLVM_PTX_BACKEND
-      foreignAcc (PTX.gemm nR opA opB) $
-#endif
       (\(T3 _ arr brr) -> mXm arr brr)
 
     nR = numericR @e
