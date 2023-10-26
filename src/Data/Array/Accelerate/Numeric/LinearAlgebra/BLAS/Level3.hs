@@ -110,3 +110,32 @@ gemm alpha opA matA opB matB = go (lift (unit alpha, matA, matB))
     -- improve this a little bit with a divide-and-conquer algorithm, for
     -- example, but using a foreign implementation will be best.
     --
+    mXm :: Acc (Matrix e) -> Acc (Matrix e) -> Acc (Matrix e)
+    mXm arr brr
+      = fold (+) 0
+      $ zipWith (\a b -> alpha * a * b) arrRepl brrRepl
+      where
+        Z :. rowsA :. _ = unlift (shape arr') :: Z :. Exp Int :. Exp Int
+        Z :. colsB :. _ = unlift (shape brr') :: Z :. Exp Int :. Exp Int
+        --
+        arrRepl         = replicate (lift $ Z :. All   :. colsB :. All) arr'
+        brrRepl         = replicate (lift $ Z :. rowsA :. All   :. All) brr'
+
+        -- apply opA
+        arr' = case opA of
+                 N -> arr
+                 T -> transpose arr
+                 H -> case nR of
+                        NumericRcomplex32 -> map conjugate (transpose arr)
+                        NumericRcomplex64 -> map conjugate (transpose arr)
+                        _                 -> transpose arr
+
+        -- apply opB and transpose at the same time, which is required for this
+        -- algorithm
+        brr' = case opB of
+                 N -> transpose brr
+                 T -> brr
+                 H -> case nR of
+                        NumericRcomplex32 -> map conjugate brr
+                        NumericRcomplex64 -> map conjugate brr
+                        _                 -> brr
