@@ -60,8 +60,8 @@ mXm arr brr
   = fold (+) 0
   $ zipWith (\a b -> a * b) arrRepl brrRepl
   where
-    Z :. rowsA :. _ = unlift (shape arr') :: Z :. Exp Int :. Exp Int
-    Z :. colsB :. _ = unlift (shape brr') :: Z :. Exp Int :. Exp Int
+    Z :. rowsA :. _ = unlift (shape arr) :: Z :. Exp Int :. Exp Int
+    Z :. colsB :. _ = unlift (shape brr) :: Z :. Exp Int :. Exp Int
     --
     arrRepl         = replicate (lift $ Z :. All   :. colsB :. All) arr
     brrRepl         = replicate (lift $ Z :. rowsA :. All   :. All) brr
