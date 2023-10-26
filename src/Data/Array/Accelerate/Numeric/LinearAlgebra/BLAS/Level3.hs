@@ -25,7 +25,7 @@ module Data.Array.Accelerate.Numeric.LinearAlgebra.BLAS.Level3 (
 
   -- Matrix-matrix operations
   gemm,
-  mXm,
+  -- mXm,
 
 ) where
 
