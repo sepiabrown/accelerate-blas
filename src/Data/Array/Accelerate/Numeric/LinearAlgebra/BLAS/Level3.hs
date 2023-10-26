@@ -55,16 +55,16 @@ import qualified Data.Array.Accelerate.Numeric.LinearAlgebra.LLVM.PTX.Level3    
 --
 -- <https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemm>
 --
-mXm :: Acc (Matrix e) -> Acc (Matrix e) -> Acc (Matrix e)
-mXm arr brr
-  = fold (+) 0
-  $ zipWith (\a b -> a * b) arrRepl brrRepl
-  where
-    Z :. rowsA :. _ = unlift (shape arr) :: Z :. Exp Int :. Exp Int
-    Z :. colsB :. _ = unlift (shape brr) :: Z :. Exp Int :. Exp Int
-    --
-    arrRepl         = replicate (lift $ Z :. All   :. colsB :. All) arr
-    brrRepl         = replicate (lift $ Z :. rowsA :. All   :. All) brr
+-- mXm :: Acc (Matrix e) -> Acc (Matrix e) -> Acc (Matrix e)
+-- mXm arr brr
+--   = fold (+) 0
+--   $ zipWith (\a b -> a * b) arrRepl brrRepl
+--   where
+--     Z :. rowsA :. _ = unlift (shape arr) :: Z :. Exp Int :. Exp Int
+--     Z :. colsB :. _ = unlift (shape brr) :: Z :. Exp Int :. Exp Int
+--     --
+--     arrRepl         = replicate (lift $ Z :. All   :. colsB :. All) arr
+--     brrRepl         = replicate (lift $ Z :. rowsA :. All   :. All) brr
 
 gemm :: forall e. Numeric e
      => Exp e                 -- ^ \( \alpha \)
